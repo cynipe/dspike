@@ -1,0 +1,60 @@
+@charset "UTF-8";
+//*************************************
+//
+// サポートブラウザ
+//
+//*************************************
+
+$support-ie6:false;
+$support-ie7:false;
+$support-ie8:true;
+$support-ie9:true;
+$support-ie10:true;
+$support-mozilla:true;
+$support-webkit:true;
+$support-opera:false;
+
+
+//*************************************
+//
+// ベンダープリフィックスの使用フラグ
+//
+//*************************************
+$prefix-webkit:true;
+$prefix-moz:true;
+$prefix-ms:true;
+$prefix-o:true;
+$prefix-default:true;
+
+
+//*************************************
+//
+// ファイルパス
+//
+//*************************************
+$img-path:"/foo/img";
+$font-path:"/foo/font";
+
+
+//*************************************
+//
+// 色定義
+//
+//*************************************
+$black:#000;
+$white:#fff;
+$red:#f00;
+
+
+//*************************************
+//
+// media query（再考の余地あり）
+//
+//*************************************
+
+$sp-size:320px;
+$tablet-min-size:321px;
+$tablet-portrait-size:768px;
+$tablet-landscape-size:769px;
+$tablet-max-size:1024px;
+$pc-size:1025px;
