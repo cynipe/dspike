@@ -1,0 +1,70 @@
+@charset "UTF-8";
+//*************************************
+//
+// 共通
+//
+//*************************************
+
+
+/*
+mixinの例
+*/
+h1{
+  @include font-size(20);
+  @include opacity(0.4);
+  @include font-family("hiragino");
+}
+
+
+/*
+自作のprefix例
+*/
+.prefix{
+  @include prefix-prop(box-sizing,border-box);
+}
+
+
+/*
+Gruntのautoprefixer
+*/
+.autoprefixer{
+  display: flex;
+  transform:scale(2.4);
+  width: calc(1321 * 123);
+}
+
+
+/*
+mediaqueryの例
+*/
+@include sp{
+  .mq{
+    background-color: #ff0;
+    width:100%;
+    height: 100px;
+  }
+}
+@include pc{
+  .mq{
+    background-color: #ccc;
+    width:900px;
+    height: 200px;
+  }
+}
+
+
+/*
+TODO spriteの生成どうするのかが悩み。
+そも各ディレクトリごとに作るものじゃないよね？
+css-spriteでこいつの生成前に作れば対応できそうだけれども。
+sprite
+.icon{
+  @include sprite(comments3);
+}
+.menu{
+  @include sprite(comments2);
+}
+.retina{
+  @include sprite-retina(comments3);
+}
+*/
