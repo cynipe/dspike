@@ -34,7 +34,8 @@ var sass = function(base) {
       autoprefixer: {
         browsers: ['last 5 version','Firefox >= 20','ie 8','ie 9']
       },
-      minifier: false
+      minifier: false,
+      rem: false
     }))
     // sourceMappingURLが自動で入らないので.cssファイルの末尾に追記する
     .pipe($.if(isCssFile, $.footer('/*# sourceMappingURL=${mapPath} */', {mapPath: mapPath})))
