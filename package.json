@@ -13,6 +13,7 @@
     "gulp.spritesmith": "~1.4.0",
     "gulp-webserver": "~0.8.7",
     "gulp-debug": "~1.0.1",
+    "underscore": "~1.7.0",
     "merge-stream": "~0.1.6"
   }
 }

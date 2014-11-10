@@ -3,6 +3,7 @@ var gulp   = require('gulp'),
     $      = require('gulp-load-plugins')({ camelize: true }),
     sprite = require('css-sprite').stream,
     path   = require('path'),
+    _      = require('underscore'),
     merge  = require('merge-stream');
 
 // FIXME 以下が対応されたらgulp-sourcemapsで生成する
@@ -54,9 +55,6 @@ var sprite = function(base) {
       cssName: '_sprite.scss',
       imgPath: imgPath,
       cssFormat: 'scss',
-      //cssVarMap: function (sprite) {
-      //  sprite.name = 'sprite-' + sprite.name;
-      //}
   }));
 
   return [
@@ -65,22 +63,24 @@ var sprite = function(base) {
   ];
 }
 
+var config = [
+  'public/hoge',
+];
+
 gulp.task('sprite', function() {
-  return merge(
-    sprite('public/hoge')
-  );
+  return merge(_.map(config, function(base) { return sprite(base); }));
 });
 
 // Stylesheets
 gulp.task('css', ['sprite'], function() {
-  return merge(
-    sass('public/hoge')
-  );
+  return merge(_.map(config, function(base) { return sass(base); }));
 });
 
 gulp.task('watch', function() {
-  gulp.watch('public/**/*.scss', ['css']);
-  gulp.watch('public/**/sprite/*.png', ['css']);
+  _.each(config, function(base) {
+    gulp.watch(path.join(base, '**', '*.css'));
+    gulp.watch(path.join(base, '**', 'sprite', '*.png'));
+  });
 });
 
 gulp.task('server', function() {
@@ -92,4 +92,4 @@ gulp.task('server', function() {
     }));
 });
 
-gulp.task('default', ['css']);
+gulp.task('default', ['css', 'server', 'watch']);
