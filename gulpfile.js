@@ -41,8 +41,38 @@ var sass = function(base) {
     .pipe(gulp.dest(dest));
 };
 
+var sprite = function(base) {
+  var src      = path.join(base, 'sprite'),
+      imgDest  = path.join(base, 'img'),
+      scssDest = path.join(base, 'scss'),
+      webRoot  = base.substring(base.indexOf(path.sep), base.length),
+      imgPath  = path.join(webRoot, 'img', 'sprite.png');
+
+  var spriteData = gulp.src(path.join(src, '*.png'))
+    .pipe($.spritesmith({
+      imgName: 'sprite.png',
+      cssName: '_sprite.scss',
+      imgPath: imgPath,
+      cssFormat: 'scss',
+      //cssVarMap: function (sprite) {
+      //  sprite.name = 'sprite-' + sprite.name;
+      //}
+  }));
+
+  return [
+    spriteData.img.pipe(gulp.dest(imgDest)), //imgNameで指定したスプライト画像の保存先
+    spriteData.css.pipe(gulp.dest(scssDest)), //cssNameで指定したcssの保存先
+  ];
+}
+
+gulp.task('sprite', function() {
+  return merge(
+    sprite('public/hoge')
+  );
+});
+
 // Stylesheets
-gulp.task('css', function() {
+gulp.task('css', ['sprite'], function() {
   return merge(
     sass('public/hoge')
   );
@@ -50,6 +80,16 @@ gulp.task('css', function() {
 
 gulp.task('watch', function() {
   gulp.watch('public/**/*.scss', ['css']);
+  gulp.watch('public/**/sprite/*.png', ['css']);
+});
+
+gulp.task('server', function() {
+  gulp.src('public')
+    .pipe($.webserver({
+      livereload: true,
+      directoryListing: true,
+      open: true
+    }));
 });
 
 gulp.task('default', ['css']);
