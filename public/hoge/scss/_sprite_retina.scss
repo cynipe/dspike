@@ -1,0 +1,35 @@
+/*
+ * for Retina
+ */
+@mixin sprite-retina-width($sprite) {
+  width: nth($sprite, 5) / 2;
+}
+
+@mixin sprite-retina-height($sprite) {
+  height: nth($sprite, 6) / 2;
+}
+
+@mixin sprite-retina-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3) / 2;
+  $sprite-offset-y: nth($sprite, 4) / 2;
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-retina-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+//background-sizeのmixinを新たに生成
+@mixin sprite-retina-size($sprite) {
+  background-size: nth($sprite, 7) / 2 nth($sprite, 8) / 2;
+}
+
+@mixin sprite-retina($sprite) {
+  @include sprite-retina-image($sprite);
+  @include sprite-retina-position($sprite);
+  @include sprite-retina-width($sprite);
+  @include sprite-retina-height($sprite);
+  @include sprite-retina-size($sprite);
+}
+

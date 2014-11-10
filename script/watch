@@ -2,4 +2,3 @@
 set -e
 script/bootstrap || exit 1
 gulp watch
-

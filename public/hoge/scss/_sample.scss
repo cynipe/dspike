@@ -54,17 +54,14 @@ mediaqueryの例
 
 
 /*
-TODO spriteの生成どうするのかが悩み。
-そも各ディレクトリごとに作るものじゃないよね？
-css-spriteでこいつの生成前に作れば対応できそうだけれども。
 sprite
+*/
 .icon{
-  @include sprite(comments3);
+  @include sprite($comments3);
 }
 .menu{
-  @include sprite(comments2);
+  @include sprite($comments2);
 }
 .retina{
-  @include sprite-retina(comments3);
+  @include sprite-retina($comments3);
 }
-*/
