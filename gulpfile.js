@@ -1,10 +1,13 @@
 'use strict';
-var gulp   = require('gulp'),
-    $      = require('gulp-load-plugins')({ camelize: true }),
-    sprite = require('css-sprite').stream,
-    path   = require('path'),
-    _      = require('underscore'),
-    merge  = require('merge-stream');
+var gulp     = require('gulp'),
+    $        = require('gulp-load-plugins')({ camelize: true }),
+    sprite   = require('css-sprite').stream,
+    path     = require('path'),
+    _        = require('underscore'),
+    merge    = require('merge-stream'),
+    gifsicle = require('imagemin-gifsicle'),
+    jpegtran = require('imagemin-jpegtran'),
+    pngquant = require('imagemin-pngquant');
 
 // FIXME 以下が対応されたらgulp-sourcemapsで生成する
 // https://github.com/sindresorhus/gulp-ruby-sass/pull/137
@@ -62,19 +65,71 @@ var sprite = function(base) {
     spriteData.img.pipe(gulp.dest(imgDest)), //imgNameで指定したスプライト画像の保存先
     spriteData.css.pipe(gulp.dest(scssDest)), //cssNameで指定したcssの保存先
   ];
+};
+
+// jpg,png,gifを圧縮して元画像と同じディレクトリ上に
+// ファイル名に.minを付与して出力する。
+// .minが含まれるファイルは圧縮対象外。
+// {ignore: [ 'path/to/ignore.jpg', path/of/ignore.png'] } のように
+// 圧縮しないファイルを指定することが出来る
+var imagemin = function(base, options) {
+  var imgPath       = path.join(base, 'img'),
+      isIgnoredFile = function(file) {
+        var pathFromBase = file.path.substring(file.base.length, file.path.length);
+        var basename = path.basename(pathFromBase);
+        if(basename.indexOf('.min') !== -1) {
+          return true;
+        }
+        if(options === undefined) {
+          return false;
+        }
+        var opts = _.defaults(options, {ignore: []});
+        return _.contains(opts.ignore, pathFromBase);
+      };
+  return gulp.src(path.join(imgPath, '*.{jpg,png,gif}'))
+    .pipe($.ignore.exclude(isIgnoredFile))
+    .pipe($.imagemin({
+        progressive: true,
+        svgoPlugins: [{removeViewBox: false}],
+        use: [gifsicle(), jpegtran(), pngquant()]
+    }))
+    .pipe($.rename({suffix: '.min'}))
+    .pipe(gulp.dest(imgPath));
 }
 
-var config = [
-  'public/hoge',
-];
+var aggregate = function(callback) {
+  return merge(_.map(_.keys(config), function(base) {
+    var options = config[base];
+    return callback(base, options);
+  }));
+};
+
+var config = {
+  'public/hoge': { },
+  //'public/foo': {
+  //  imagemin: {
+  //    ignore: [ 'sprite.png' ],
+  //  }
+  //},
+};
 
 gulp.task('sprite', function() {
-  return merge(_.map(config, function(base) { return sprite(base); }));
+  return aggregate(function(base) {
+    return sprite(base);
+  });
 });
 
 // Stylesheets
 gulp.task('css', ['sprite'], function() {
-  return merge(_.map(config, function(base) { return sass(base); }));
+  return aggregate(function(base) {
+    return sass(base);
+  });
+});
+
+gulp.task('imagemin', function() {
+  return aggregate(function(base, opts) {
+    return imagemin(base, opts.imagemin);
+  });
 });
 
 gulp.task('watch', function() {
