@@ -98,7 +98,7 @@ var aggregate = function(callback) {
 
 var config = {
   'public/hoge': { },
-  'public/foo': { },
+  //'public/foo': { },
 };
 
 gulp.task('sprite', function() {
