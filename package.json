@@ -20,6 +20,7 @@
     "gulp-webserver": "~0.8.7",
     "gulp-debug": "~1.0.1",
     "underscore": "~1.7.0",
+    "underscore.string": "~2.3.2",
     "merge-stream": "~0.1.6"
   }
 }

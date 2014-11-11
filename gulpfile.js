@@ -9,10 +9,12 @@ var gulp     = require('gulp'),
     jpegtran = require('imagemin-jpegtran'),
     pngquant = require('imagemin-pngquant');
 
+_.str = require('underscore.string');
+
 // FIXME 以下が対応されたらgulp-sourcemapsで生成する
 // https://github.com/sindresorhus/gulp-ruby-sass/pull/137
 // sourceMappingURLについても手動で入れなくても対応できるようになるはず
-var sass = function(base) {
+var sass = function(base, options) {
   var src        = path.join(base, 'scss'),
       dest       = path.join(base, 'css'),
       srcmapPath = path.join('..', 'scss'),
@@ -46,7 +48,7 @@ var sass = function(base) {
     .pipe(gulp.dest(dest));
 };
 
-var sprite = function(base) {
+var sprite = function(base, options) {
   var src      = path.join(base, 'sprite'),
       imgDest  = path.join(base, 'img'),
       scssDest = path.join(base, 'scss'),
@@ -67,26 +69,16 @@ var sprite = function(base) {
   ];
 };
 
-// jpg,png,gifを圧縮して元画像と同じディレクトリ上に
-// ファイル名に.minを付与して出力する。
-// .minが含まれるファイルは圧縮対象外。
-// {ignore: [ 'path/to/ignore.jpg', path/of/ignore.png'] } のように
-// 圧縮しないファイルを指定することが出来る
+// jpg,png,gifを圧縮して元画像と同じディレクトリ上にファイル名に.minを付与して出力する。
+// .min, .ignoreが含まれるファイルは圧縮対象外。
 var imagemin = function(base, options) {
   var imgPath       = path.join(base, 'img'),
       isIgnoredFile = function(file) {
         var pathFromBase = file.path.substring(file.base.length, file.path.length);
-        var basename = path.basename(pathFromBase);
-        if(basename.indexOf('.min') !== -1) {
-          return true;
-        }
-        if(options === undefined) {
-          return false;
-        }
-        var opts = _.defaults(options, {ignore: []});
-        return _.contains(opts.ignore, pathFromBase);
+        var extname = path.extname(pathFromBase);
+        return _.str.endsWith(pathFromBase, '.ignore' + extname) || _.str.endsWith(pathFromBase, '.min' + extname);
       };
-  return gulp.src(path.join(imgPath, '*.{jpg,png,gif}'))
+  return gulp.src(path.join(imgPath, '**', '*.{jpg,png,gif}'))
     .pipe($.ignore.exclude(isIgnoredFile))
     .pipe($.imagemin({
         progressive: true,
@@ -106,11 +98,7 @@ var aggregate = function(callback) {
 
 var config = {
   'public/hoge': { },
-  //'public/foo': {
-  //  imagemin: {
-  //    ignore: [ 'sprite.png' ],
-  //  }
-  //},
+  'public/foo': { },
 };
 
 gulp.task('sprite', function() {
