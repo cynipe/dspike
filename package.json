@@ -6,14 +6,21 @@
     "gulp": "~3.8.8",
     "gulp-load-plugins": "~0.7.0",
     "gulp-if": "~1.2.5",
+    "gulp-ignore": "~1.2.1",
+    "gulp-rename": "~1.2.0",
     "gulp-ruby-sass": "~0.7.1",
     "gulp-footer": "~1.0.5",
     "gulp-pleeease": "~1.0.4",
     "gulp-plumber": "~0.6.6",
     "gulp.spritesmith": "~1.4.0",
+    "gulp-imagemin": "~1.2.1",
+    "imagemin-jpegtran": "*",
+    "imagemin-pngquant": "*",
+    "imagemin-gifsicle": "*",
     "gulp-webserver": "~0.8.7",
     "gulp-debug": "~1.0.1",
     "underscore": "~1.7.0",
+    "underscore.string": "~2.3.2",
     "merge-stream": "~0.1.6"
   }
 }
