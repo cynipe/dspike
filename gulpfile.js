@@ -1,7 +1,6 @@
 'use strict';
 var gulp     = require('gulp'),
     $        = require('gulp-load-plugins')({ camelize: true }),
-    sprite   = require('css-sprite').stream,
     path     = require('path'),
     _        = require('underscore'),
     merge    = require('merge-stream'),
