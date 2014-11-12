@@ -120,7 +120,7 @@ gulp.task('imagemin', function() {
 });
 
 gulp.task('watch', function() {
-  _.each(config, function(base) {
+  _.each(_.keys(config), function(base) {
     gulp.watch(path.join(base, '**', '*.css'));
     gulp.watch(path.join(base, '**', 'sprite', '*.png'));
   });
